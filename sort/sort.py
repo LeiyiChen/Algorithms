@@ -6,6 +6,7 @@
 3.选择排序
 4.冒泡排序
 5.归并排序
+6.快速排序
 
 '''
 def insert_sort(nums):
@@ -92,6 +93,25 @@ def merge_sort(nums):
         left = merge_sort(nums[:n//2])
         right = merge_sort(nums[n//2:])
     return merge(left, right)
+
+#快速排序
+def partition(nums, left, right):
+    x = nums[right]
+    i = left - 1
+    for j in range(left, right):
+        if nums[j] <= x:
+            i += 1
+            nums[i], nums[j] = nums[j], nums[i]
+    nums[i+1], nums[right] = nums[right], nums[i + 1]
+    return i+1
+
+def quick_sort(nums, left, right):
+    if left >= right:
+        return
+    mid = partition(nums, left, right)
+    quick_sort(nums, left, mid-1)
+    quick_sort(nums, mid+1, right)
+    return nums
 
 
 
