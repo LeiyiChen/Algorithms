@@ -26,7 +26,7 @@
 ##1.插入排序
 插入排序工作原理是通过构建有序序列，对于未排序的数据，在已排序序列中从后向前扫描，找到相应位置并插入。
 算法步骤：
-1）从索引为1开始遍历待排序序列，用变量i来记录遍历的位置，为了后续比较方便，使用tmp临时存放每一个nums[i]的值。根据算法的思想，变量i之前的序列一定是有序且增序的序列，那么只要后序遍历中遇到一个nums[i] < nums[i-1]，则就要将nums[i]插入到前面合适的位置。所以这里引入变量j用来查找前i个位置中，nums[i]需要插入的位置，即j的初始值为i，只要nums[i]也就是tmp小于nums[j],将nums[j-1]后移到nums[j],而nums[j-1]用来存储tmp，j--。直到j=0或者nums[j-1]>tmp，则插入成功。这是典型的数组移动方法，通过不停后移来实现。但是在Python中我们可以实现得更友好，使用list的pop和insert。
+从索引为1开始遍历待排序序列，用变量i来记录遍历的位置，为了后续比较方便，使用tmp临时存放每一个nums[i]的值。根据算法的思想，变量i之前的序列一定是有序且增序的序列，那么只要后序遍历中遇到一个nums[i] < nums[i-1]，则就要将nums[i]插入到前面合适的位置。所以这里引入变量j用来查找前i个位置中，nums[i]需要插入的位置，即j的初始值为i，只要nums[i]也就是tmp小于nums[j],将nums[j-1]后移到nums[j],而nums[j-1]用来存储tmp，j--。直到j=0或者nums[j-1]>tmp，则插入成功。这是典型的数组移动方法，通过不停后移来实现。但是在Python中我们可以实现得更友好，使用list的pop和insert。
 Python代码实现：
 ```python
 def insert_sort(nums):
@@ -241,3 +241,52 @@ def quick_sort(nums, left, right):
     return nums
 ```
 分析：最坏时间复杂度是O(n^2)，最优时间复杂度是O(nlogN)，平均时间复杂度O(nlogN)。不稳定的排序算法。空间复杂度O(nlogN)。
+
+
+## 7.堆排序
+简单选择排序的问题：没有把每一趟的比较结果保存下来，在后一趟的比较中，有许多比较在前一趟已经做过了。
+1）堆及其特点
+序列{k1,k2,...,kn}满足ki<=k2i,ki<=k2i+1，称为小顶堆。
+序列{k1,k2,...,kn}满足ki>=k2i,ki>=k2i+1，称为大顶堆。其中i=1,2,...,n/2。
+特点：小顶堆的堆顶（第一个元素）为最小元素，大顶堆的堆顶为最大元素。
+
+2）判断序列是否构成堆
+方法：用ki作为编号i的结点，画一棵完全二叉树，比较双亲和孩子容易判断是否构成堆。
+例如判断序列[12,36,24,85,47,30,53,91]是否构成堆。
+如图所示，为小顶堆。
+
+[![](https://i.loli.net/2018/07/05/5b3dda9894fe8.png)](https://i.loli.net/2018/07/05/5b3dda9894fe8.png)
+
+3）堆排序过程
+
+[![](https://i.loli.net/2018/07/05/5b3ddd26ed12b.png)](https://i.loli.net/2018/07/05/5b3ddd26ed12b.png)
+
+[![](https://i.loli.net/2018/07/05/5b3dde7d477db.png)](https://i.loli.net/2018/07/05/5b3dde7d477db.png)
+
+Python实现
+```python
+# 堆排序
+def adjust_heap(lists, i, size):
+    lchild = 2 * i + 1
+    rchild = 2 * i + 2
+    max = i
+    if lchild < size and lists[lchild] > lists[max]:
+        max = lchild
+    if rchild < size and lists[rchild] > lists[max]:
+        max = rchild
+    if max != i:
+        lists[max], lists[i] = lists[i], lists[max]
+        adjust_heap(lists, max, size)  # 创建堆
+def build_heap(lists, size):
+    for i in range(0, (int(size / 2)))[::-1]:
+        adjust_heap(lists, i, size)
+
+def heap_sort(lists):
+    size = len(lists)
+    build_heap(lists, size)
+    for i in range(0, size)[::-1]:
+        lists[0], lists[i] = lists[i], lists[0]
+        adjust_heap(lists, 0, i)
+    return lists
+```
+分析：堆排序的时间复杂度是O(nlogN)。

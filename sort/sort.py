@@ -7,6 +7,7 @@
 4.冒泡排序
 5.归并排序
 6.快速排序
+7.堆排序
 
 '''
 def insert_sort(nums):
@@ -113,5 +114,29 @@ def quick_sort(nums, left, right):
     quick_sort(nums, mid+1, right)
     return nums
 
+
+# 堆排序
+def adjust_heap(lists, i, size):
+    lchild = 2 * i + 1
+    rchild = 2 * i + 2
+    max = i
+    if lchild < size and lists[lchild] > lists[max]:
+        max = lchild
+    if rchild < size and lists[rchild] > lists[max]:
+        max = rchild
+    if max != i:
+        lists[max], lists[i] = lists[i], lists[max]
+        adjust_heap(lists, max, size)  # 创建堆
+def build_heap(lists, size):
+    for i in range(0, (int(size / 2)))[::-1]:
+        adjust_heap(lists, i, size)
+
+def heap_sort(lists):
+    size = len(lists)
+    build_heap(lists, size)
+    for i in range(0, size)[::-1]:
+        lists[0], lists[i] = lists[i], lists[0]
+        adjust_heap(lists, 0, i)
+    return lists
 
 
